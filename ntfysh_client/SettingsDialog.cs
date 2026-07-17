@@ -50,6 +50,12 @@ namespace ntfysh_client
         #endregion
 
         #region: Custom tray notification options
+        public bool AutoStart
+        {
+            get => autoStartCheckBox.Checked;
+            set => autoStartCheckBox.Checked = value;
+        }
+
         public bool CustomTrayNotificationsShowTimeoutBar
         {
             get => customNotificationsShowTimeoutBar.Checked;
@@ -96,7 +102,7 @@ namespace ntfysh_client
             SetNotificationsUiElements();
         }
 
-        private const string _windowsNotificationsTimeout = "Notification Toast Timeout (seconds, may be ignored by OS based on accessibility settings):";
-        private const string _customNotificationsTimeout = "Notification Toast Timeout (seconds, use 0 to require closing notification):";
+        private const string _windowsNotificationsTimeout = "通知超时（秒，操作系统可能根据辅助功能设置忽略该值）：";
+        private const string _customNotificationsTimeout = "通知超时（秒，设为 0 需要手动关闭）：";
     }
 }

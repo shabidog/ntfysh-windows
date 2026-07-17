@@ -59,7 +59,7 @@ namespace ntfysh_client
             this.subscribeNewTopic.Name = "subscribeNewTopic";
             this.subscribeNewTopic.Size = new System.Drawing.Size(188, 27);
             this.subscribeNewTopic.TabIndex = 2;
-            this.subscribeNewTopic.Text = "Add";
+            this.subscribeNewTopic.Text = "添加";
             this.subscribeNewTopic.UseVisualStyleBackColor = true;
             this.subscribeNewTopic.Click += new System.EventHandler(this.subscribeNewTopic_Click);
             // 
@@ -72,7 +72,7 @@ namespace ntfysh_client
             this.removeSelectedTopics.Name = "removeSelectedTopics";
             this.removeSelectedTopics.Size = new System.Drawing.Size(188, 27);
             this.removeSelectedTopics.TabIndex = 0;
-            this.removeSelectedTopics.Text = "Remove selected";
+            this.removeSelectedTopics.Text = "删除选中";
             this.removeSelectedTopics.UseVisualStyleBackColor = true;
             this.removeSelectedTopics.Click += new System.EventHandler(this.removeSelectedTopics_Click);
             // 
@@ -89,6 +89,7 @@ namespace ntfysh_client
             this.notificationTopics.Size = new System.Drawing.Size(386, 199);
             this.notificationTopics.TabIndex = 3;
             this.notificationTopics.Click += new System.EventHandler(this.notificationTopics_Click);
+            this.notificationTopics.DoubleClick += new System.EventHandler(this.notificationTopics_DoubleClick);
             this.notificationTopics.SelectedValueChanged += new System.EventHandler(this.notificationTopics_SelectedValueChanged);
             // 
             // notifyIcon
@@ -112,7 +113,7 @@ namespace ntfysh_client
             this.showControlWindowToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showControlWindowToolStripMenuItem.Image")));
             this.showControlWindowToolStripMenuItem.Name = "showControlWindowToolStripMenuItem";
             this.showControlWindowToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.showControlWindowToolStripMenuItem.Text = "Show control window";
+            this.showControlWindowToolStripMenuItem.Text = "显示控制窗口";
             this.showControlWindowToolStripMenuItem.Click += new System.EventHandler(this.showControlWindowToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
@@ -120,7 +121,7 @@ namespace ntfysh_client
             this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Text = "退出";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // menuStrip1
@@ -143,14 +144,14 @@ namespace ntfysh_client
             this.settingsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Text = "文件";
             // 
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem1.Image")));
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
             this.exitToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem1.Text = "Exit";
+            this.exitToolStripMenuItem1.Text = "退出";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
             // helpToolStripMenuItem
@@ -161,14 +162,14 @@ namespace ntfysh_client
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Text = "帮助";
             // 
             // ntfyshWebsiteToolStripMenuItem
             // 
             this.ntfyshWebsiteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("ntfyshWebsiteToolStripMenuItem.Image")));
             this.ntfyshWebsiteToolStripMenuItem.Name = "ntfyshWebsiteToolStripMenuItem";
             this.ntfyshWebsiteToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.ntfyshWebsiteToolStripMenuItem.Text = "Open ntfy.sh website";
+            this.ntfyshWebsiteToolStripMenuItem.Text = "打开 ntfy.sh 网站";
             this.ntfyshWebsiteToolStripMenuItem.Click += new System.EventHandler(this.ntfyshWebsiteToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
@@ -181,7 +182,7 @@ namespace ntfysh_client
             this.aboutToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("aboutToolStripMenuItem.Image")));
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Text = "关于";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // label1
@@ -192,14 +193,14 @@ namespace ntfysh_client
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(170, 15);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Subscribed Notification Topics:";
+            this.label1.Text = "已订阅的通知主题：";
             // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("settingsToolStripMenuItem.Image")));
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Text = "设置";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // MainForm

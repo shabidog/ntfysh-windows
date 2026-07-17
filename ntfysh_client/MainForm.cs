@@ -94,14 +94,14 @@ namespace ntfysh_client
 
         private void OnConnectionMultiAttemptFailure(NotificationListener sender, SubscribedTopic topic)
         {
-            MessageBox.Show($"Connecting to topic ID '{topic.TopicId}' on server '{topic.ServerUrl}' failed after multiple attempts.\n\nThis topic ID will be ignored and you will not receive notifications for it until you restart the application.", "Connection Failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"连接到主题 ID '{topic.TopicId}' 在服务器 '{topic.ServerUrl}' 上多次重试后失败。\n\n该主题 ID 将被忽略，重启应用程序前您将无法收到该主题的通知。", "连接失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         
         private void OnConnectionCredentialsFailure(NotificationListener sender, SubscribedTopic topic)
         {
-            string reason = string.IsNullOrWhiteSpace(topic.Username) ? "credentials are required but were not provided" : "the entered credentials are incorrect";
+            string reason = string.IsNullOrWhiteSpace(topic.Username) ? "需要提供认证信息但未提供" : "输入的认证信息不正确";
             
-            MessageBox.Show($"Connecting to topic ID '{topic.TopicId}' on server '{topic.ServerUrl}' failed because {reason}.\n\nThis topic ID will be ignored and you will not receive notifications for it until you correct the credentials.", "Connection Authentication Failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"连接到主题 ID '{topic.TopicId}' 在服务器 '{topic.ServerUrl}' 上失败，原因是{reason}。\n\n该主题 ID 将被忽略，更正认证信息前您将无法收到该主题的通知。", "连接认证失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void subscribeNewTopic_Click(object sender, EventArgs e)
@@ -151,6 +151,7 @@ namespace ntfysh_client
             using SettingsDialog dialog = new();
 
             //Load current settings into dialog
+            dialog.AutoStart = Program.Settings.AutoStart;
             dialog.ReconnectAttempts = Program.Settings.ReconnectAttempts;
             dialog.ReconnectAttemptDelay = Program.Settings.ReconnectAttemptDelay;
             dialog.UseNativeWindowsNotifications = Program.Settings.NotificationsMethod == SettingsModel.NotificationsType.NativeWindows;
@@ -174,6 +175,8 @@ namespace ntfysh_client
             Program.Settings.CustomTrayNotificationsShowTimeoutBar = dialog.CustomTrayNotificationsShowTimeoutBar;
             Program.Settings.CustomTrayNotificationsShowInDarkMode = dialog.CustomTrayNotificationsShowInDarkMode;
             Program.Settings.CustomTrayNotificationsPlayDefaultWindowsSound = dialog.CustomTrayNotificationsPlayDefaultWindowsSound;
+            Program.Settings.AutoStart = dialog.AutoStart;
+            Program.SetAutoStart(Program.Settings.AutoStart);
 
             //Save new settings persistently
             SaveSettingsToFile();
@@ -190,6 +193,55 @@ namespace ntfysh_client
             int clickedItemIndex = notificationTopics.IndexFromPoint(new Point(ev.X, ev.Y));
 
             if (clickedItemIndex == -1) notificationTopics.ClearSelected();
+        }
+
+        private async void notificationTopics_DoubleClick(object sender, EventArgs e)
+        {
+            if (notificationTopics.SelectedItem is not string unique) return;
+
+            SubscribedTopic? topic = _notificationListener.SubscribedTopicsByUnique.GetValueOrDefault(unique);
+            if (topic is null) return;
+
+            string oldUnique = unique;
+            bool useWebsockets = topic.ServerUrl.StartsWith("ws://") || topic.ServerUrl.StartsWith("wss://");
+
+            using SubscribeDialog dialog = new SubscribeDialog(
+                notificationTopics,
+                oldUnique,
+                topic.TopicId,
+                topic.ServerUrl,
+                topic.Username,
+                topic.Password,
+                useWebsockets
+            );
+
+            DialogResult result = dialog.ShowDialog();
+            if (result != DialogResult.OK) return;
+
+            int reconnectAttempts = Convert.ToInt32(Math.Ceiling(Program.Settings.ReconnectAttempts));
+            int reconnectAttemptDelay = Convert.ToInt32(Math.Ceiling(Program.Settings.ReconnectAttemptDelay));
+
+            // Unsubscribe old topic
+            await _notificationListener.UnsubscribeFromTopicAsync(oldUnique);
+
+            // Subscribe new topic
+            if (dialog.UseWebsockets)
+            {
+                _notificationListener.SubscribeToTopicUsingWebsocket(dialog.Unique, dialog.TopicId, dialog.ServerUrl, dialog.Username, dialog.Password, reconnectAttempts, reconnectAttemptDelay);
+            }
+            else
+            {
+                _notificationListener.SubscribeToTopicUsingLongHttpJson(dialog.Unique, dialog.TopicId, dialog.ServerUrl, dialog.Username, dialog.Password, reconnectAttempts, reconnectAttemptDelay);
+            }
+
+            // Update the list item
+            int idx = notificationTopics.Items.IndexOf(oldUnique);
+            if (idx >= 0)
+            {
+                notificationTopics.Items[idx] = dialog.Unique;
+            }
+
+            SaveTopicsToFile();
         }
 
         private void notifyIcon_Click(object sender, EventArgs e)
@@ -326,7 +378,8 @@ namespace ntfysh_client
 
         private SettingsModel GetDefaultSettings() => new()
         {
-            Revision = 2,
+            Revision = 3,
+            AutoStart = false,
             Timeout = 5,
             ReconnectAttempts = 10,
             ReconnectAttemptDelay = 3,

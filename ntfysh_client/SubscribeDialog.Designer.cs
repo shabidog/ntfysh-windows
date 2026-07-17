@@ -65,7 +65,7 @@ namespace ntfysh_client
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(88, 27);
             this.button2.TabIndex = 7;
-            this.button2.Text = "Cancel";
+            this.button2.Text = "取消";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -77,7 +77,7 @@ namespace ntfysh_client
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(88, 27);
             this.button1.TabIndex = 6;
-            this.button1.Text = "Subscribe";
+            this.button1.Text = "订阅";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -89,7 +89,7 @@ namespace ntfysh_client
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 15);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Topic ID:";
+            this.label1.Text = "主题 ID：";
             // 
             // topicId
             // 
@@ -122,7 +122,7 @@ namespace ntfysh_client
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(66, 15);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Server URL:";
+            this.label2.Text = "服务器 URL：";
             // 
             // username
             // 
@@ -143,7 +143,7 @@ namespace ntfysh_client
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(63, 15);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Username:";
+            this.label3.Text = "用户名：";
             // 
             // password
             // 
@@ -165,7 +165,7 @@ namespace ntfysh_client
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(60, 15);
             this.label4.TabIndex = 7;
-            this.label4.Text = "Password:";
+            this.label4.Text = "密码：";
             // 
             // label5
             // 
@@ -175,15 +175,15 @@ namespace ntfysh_client
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(99, 15);
             this.label5.TabIndex = 9;
-            this.label5.Text = "Connection Type:";
+            this.label5.Text = "连接类型：";
             // 
             // connectionType
             // 
             this.connectionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.connectionType.FormattingEnabled = true;
             this.connectionType.Items.AddRange(new object[] {
-            "Websockets (Recommended)",
-            "Long HTTP JSON (Robust)"});
+            "WebSocket（推荐）",
+            "HTTP 长轮询（稳健）"});
             this.connectionType.Location = new System.Drawing.Point(14, 208);
             this.connectionType.Name = "connectionType";
             this.connectionType.Size = new System.Drawing.Size(318, 23);
@@ -215,7 +215,7 @@ namespace ntfysh_client
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Subscribe to new topic";
+            this.Text = "订阅新主题";
             this.Load += new System.EventHandler(this.SubscribeDialog_Load);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);

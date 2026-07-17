@@ -206,7 +206,7 @@ namespace ntfysh_client
         private void InitializeWindowHidden()
         {
             Opacity = 0;
-            ShowNotification("Title", "Message");
+            ShowNotification("标题", "消息");
             ButtonClose.Focus();
             Visible = false;
             Opacity = 1;

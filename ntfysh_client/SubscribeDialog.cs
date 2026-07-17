@@ -6,6 +6,8 @@ namespace ntfysh_client
     public partial class SubscribeDialog : Form
     {
         private readonly ListBox _notificationTopics;
+        private readonly string? _originalUnique;
+        private readonly bool _isEditMode;
         
         public string TopicId => topicId.Text;
         
@@ -23,10 +25,10 @@ namespace ntfysh_client
             {
                 switch (connectionType.Text)
                 {
-                    case "Websockets (Recommended)":
+                    case "WebSocket（推荐）":
                         return true;
 
-                    case "Long HTTP JSON (Robust)":
+                    case "HTTP 长轮询（稳健）":
                         return false;
 
                     default:
@@ -38,12 +40,27 @@ namespace ntfysh_client
         public SubscribeDialog(ListBox notificationTopics)
         {
             _notificationTopics = notificationTopics;
+            _isEditMode = false;
             InitializeComponent();
+        }
+
+        public SubscribeDialog(ListBox notificationTopics, string unique, string topicId, string serverUrl, string? username, string? password, bool useWebsockets)
+        {
+            _notificationTopics = notificationTopics;
+            _originalUnique = unique;
+            _isEditMode = true;
+            InitializeComponent();
+
+            this.topicId.Text = topicId;
+            this.serverUrl.Text = serverUrl;
+            this.username.Text = username ?? string.Empty;
+            this.password.Text = password ?? string.Empty;
+            connectionType.SelectedIndex = useWebsockets ? 0 : 1;
         }
 
         private void SubscribeDialog_Load(object sender, EventArgs e)
         {
-            connectionType.SelectedIndex = 0;
+            if (!_isEditMode) connectionType.SelectedIndex = 0;
         }
 
         private bool ReparseAddress()
@@ -122,7 +139,7 @@ namespace ntfysh_client
         {
             if (topicId.Text.Length < 1)
             {
-                MessageBox.Show("You must specify a topic name.", "Topic name not specified", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("请指定主题名称。", "未指定主题名称", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
                 topicId.Focus();
                 return;
@@ -130,7 +147,7 @@ namespace ntfysh_client
 
             if (serverUrl.Text.Length < 1)
             {
-                MessageBox.Show("You must specify a server URL. The default is wss://ntfy.sh", "Server URL not specified", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("请指定服务器 URL。默认为 wss://ntfy.sh", "未指定服务器 URL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
                 serverUrl.Focus();
                 return;
@@ -138,7 +155,7 @@ namespace ntfysh_client
 
             if (username.Text.Length > 0 && password.Text.Length < 1)
             {
-                MessageBox.Show("You must specify a password alongside the username", "Password not specified", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("请同时指定密码", "未指定密码", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
                 password.Focus();
                 return;
@@ -146,7 +163,7 @@ namespace ntfysh_client
 
             if (password.Text.Length > 0 && username.Text.Length < 1)
             {
-                MessageBox.Show("You must specify a username alongside the password", "Username not specified", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("请同时指定用户名", "未指定用户名", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
                 username.Focus();
                 return;
@@ -154,17 +171,21 @@ namespace ntfysh_client
 
             if (_notificationTopics.Items.Contains(Unique))
             {
-                MessageBox.Show($"The specified topic '{topicId.Text}' on the server '{serverUrl.Text}' is already subscribed", "Topic already subscribed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                DialogResult = DialogResult.None;
-                username.Focus();
-                return;
+                // 编辑模式下，如果新 Unique 与编辑前相同，跳过重复检查
+                if (!_isEditMode || Unique != _originalUnique)
+                {
+                    MessageBox.Show($"服务器 '{serverUrl.Text}' 上的主题 '{topicId.Text}' 已订阅", "主题已订阅", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    DialogResult = DialogResult.None;
+                    username.Focus();
+                    return;
+                }
             }
 
             try
             {
                 if (!ReparseAddress())
                 {
-                    MessageBox.Show($"The specified server URL is invalid. Accepted schemas are: http:// https:// ws:// wss://", "Invalid Server URL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"指定的服务器 URL 无效。支持的协议：http:// https:// ws:// wss://", "无效的服务器 URL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     DialogResult = DialogResult.None;
                     connectionType.Focus();
                     return;
@@ -172,7 +193,7 @@ namespace ntfysh_client
             }
             catch (InvalidOperationException)
             {
-                MessageBox.Show($"The selected Connection Type '{connectionType.Text}' is invalid.", "Invalid Connection Type", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"选中的连接类型 '{connectionType.Text}' 无效。", "无效的连接类型", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
                 connectionType.Focus();
                 return;

@@ -49,7 +49,7 @@ namespace ntfysh_client
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(88, 27);
             this.button1.TabIndex = 0;
-            this.button1.Text = "Close";
+            this.button1.Text = "关闭";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -82,7 +82,7 @@ namespace ntfysh_client
             this.aboutPage.Padding = new System.Windows.Forms.Padding(3);
             this.aboutPage.Size = new System.Drawing.Size(590, 166);
             this.aboutPage.TabIndex = 0;
-            this.aboutPage.Text = "About";
+            this.aboutPage.Text = "关于";
             this.aboutPage.UseVisualStyleBackColor = true;
             // 
             // richTextBox2
@@ -104,7 +104,7 @@ namespace ntfysh_client
             this.licensePage.Padding = new System.Windows.Forms.Padding(3);
             this.licensePage.Size = new System.Drawing.Size(590, 166);
             this.licensePage.TabIndex = 1;
-            this.licensePage.Text = "MIT License\n\n";
+            this.licensePage.Text = "MIT 许可证";
             this.licensePage.UseVisualStyleBackColor = true;
             // 
             // richTextBox1
@@ -136,7 +136,7 @@ namespace ntfysh_client
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "About";
+            this.Text = "关于";
             this.tabControl1.ResumeLayout(false);
             this.aboutPage.ResumeLayout(false);
             this.licensePage.ResumeLayout(false);

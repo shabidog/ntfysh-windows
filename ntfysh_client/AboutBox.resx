@@ -58,13 +58,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="richTextBox2.Text" xml:space="preserve">
-    <value>ntfy.sh Windows by Lucas Bortoli and Contributors
+    <value>ntfy.sh Windows 作者：Lucas Bortoli 和贡献者
 
-ntfy.sh Windows is a small lightweight push notification client for notifications sent via https://ntfy.sh compatible servers.
+ntfy.sh Windows 是一个轻量级的推送通知客户端，用于接收通过 https://ntfy.sh 兼容服务器发送的通知。
 
-It is capable of receiving notifications from multiple ntfy.sh servers simultaneously via Websocket or HTTP and supports both unauthenticated and authenticated topics.
+它能够通过 WebSocket 或 HTTP 同时接收来自多个 ntfy.sh 服务器的通知，并支持未认证和认证的主题。
 
-Get the latest release and keep track of updates via GitHub at https://github.com/lucas-bortoli/ntfysh-windows</value>
+获取最新版本并关注更新，请访问 GitHub：https://github.com/lucas-bortoli/ntfysh-windows</value>
   </data>
   <data name="richTextBox1.Text" xml:space="preserve">
     <value>Copyright © 2022 Lucas Bortoli
