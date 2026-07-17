@@ -17,6 +17,7 @@ namespace ntfysh_client
         private bool _startInTray;
         private bool _trueExit;
         private NotificationDialog _notificationDialog;
+        private readonly Dictionary<string, string> _topicConnectionErrors = new();
 
         public MainForm(NotificationListener notificationListener, bool startInTray = false)
         {
@@ -59,8 +60,34 @@ namespace ntfysh_client
             base.SetVisibleCore(value);
         }
 
+        /// <summary>
+        /// Update the window title based on current connection error state.
+        /// Must be called from the UI thread.
+        /// </summary>
+        private void UpdateTitle()
+        {
+            if (_topicConnectionErrors.Count == 0)
+            {
+                Text = "ntfysh";
+            }
+            else
+            {
+                string errors = string.Join(", ", _topicConnectionErrors.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
+                Text = $"ntfysh - {errors}";
+            }
+        }
+
         private void OnNotificationReceive(object sender, NotificationReceiveEventArgs e)
         {
+            // Clear connection error for this topic when a message is received
+            string? topicKey = _notificationListener.SubscribedTopicsByUnique
+                .FirstOrDefault(kvp => kvp.Value == e.Sender).Key;
+            if (topicKey is not null)
+            {
+                _topicConnectionErrors.Remove(topicKey);
+                UpdateTitle();
+            }
+
             ToolTipIcon priorityIcon = e.Priority switch
             {
                 NotificationPriority.Max => ToolTipIcon.Error,
@@ -94,7 +121,20 @@ namespace ntfysh_client
 
         private void OnConnectionMultiAttemptFailure(NotificationListener sender, SubscribedTopic topic)
         {
-            MessageBox.Show($"连接到主题 ID '{topic.TopicId}' 在服务器 '{topic.ServerUrl}' 上多次重试后失败。\n\n该主题 ID 将被忽略，重启应用程序前您将无法收到该主题的通知。", "连接失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            string? topicKey = _notificationListener.SubscribedTopicsByUnique
+                .FirstOrDefault(kvp => kvp.Value == topic).Key;
+            if (topicKey is not null)
+            {
+                _topicConnectionErrors[topicKey] = "连接失败";
+                if (InvokeRequired)
+                {
+                    Invoke(UpdateTitle);
+                }
+                else
+                {
+                    UpdateTitle();
+                }
+            }
         }
         
         private void OnConnectionCredentialsFailure(NotificationListener sender, SubscribedTopic topic)
@@ -139,10 +179,12 @@ namespace ntfysh_client
             {
                 string topicUniqueString = (string)notificationTopics.Items[notificationTopics.SelectedIndex];
                 
+                _topicConnectionErrors.Remove(topicUniqueString);
                 await _notificationListener.UnsubscribeFromTopicAsync(topicUniqueString);
                 notificationTopics.Items.Remove(topicUniqueString);
             }
 
+            UpdateTitle();
             SaveTopicsToFile();
         }
         
