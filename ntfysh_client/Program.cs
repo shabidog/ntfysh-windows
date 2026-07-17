@@ -71,6 +71,12 @@ namespace ntfysh_client
                 string? exePath = Assembly.GetEntryAssembly()?.Location;
                 if (exePath is not null)
                 {
+                    // Assembly.GetEntryAssembly().Location returns the DLL path in .NET.
+                    // We need the .exe path for autostart registration.
+                    if (exePath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                    {
+                        exePath = Path.ChangeExtension(exePath, ".exe");
+                    }
                     runKey.SetValue(valueName, $"\"{exePath}\" -t");
                 }
             }
